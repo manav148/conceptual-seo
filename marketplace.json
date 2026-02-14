@@ -1,0 +1,16 @@
+{
+  "name": "conceptual-seo-marketplace",
+  "description": "Claude Code marketplace for WordPress and SEO tools",
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "name": "wordpress-crud",
+      "description": "WordPress Pages CRUD operations — Create, Read, Update, and Delete pages via the WordPress REST API with session-based authentication.",
+      "path": "wordpress-crud-plugin",
+      "version": "1.0.0",
+      "author": "Manav Kundra",
+      "keywords": ["wordpress", "cms", "pages", "crud", "rest-api"],
+      "skills": ["wp-pages"]
+    }
+  ]
+}

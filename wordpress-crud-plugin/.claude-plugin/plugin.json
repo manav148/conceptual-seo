@@ -1,0 +1,11 @@
+{
+  "name": "wordpress-crud",
+  "description": "WordPress Pages CRUD operations plugin. Create, Read, Update, and Delete WordPress pages directly from Claude Code using the WordPress REST API with session-based authentication.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Manav Kundra",
+    "url": "https://github.com/manav148"
+  },
+  "keywords": ["wordpress", "cms", "pages", "crud", "rest-api"],
+  "license": "MIT"
+}
