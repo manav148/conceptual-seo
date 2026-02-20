@@ -1,6 +1,6 @@
 # conceptual-seo
 
-Claude Code marketplace for WordPress, Ghost CMS, and SEO tools.
+Claude Code marketplace for WordPress, Ghost CMS, Webflow, and SEO tools.
 
 ## Plugins
 
@@ -15,6 +15,12 @@ See [wordpress-crud-plugin/README.md](./wordpress-crud-plugin/README.md) for det
 Full CRUD operations for Ghost CMS pages via the Admin API with session-based JWT authentication.
 
 See [ghost-crud-plugin/README.md](./ghost-crud-plugin/README.md) for details.
+
+### webflow-crud
+
+Full CRUD operations for Webflow CMS collection items plus static page metadata updates via the Data API v2 with session-based Bearer token auth.
+
+See [webflow-crud-plugin/README.md](./webflow-crud-plugin/README.md) for details.
 
 ## Marketplace
 

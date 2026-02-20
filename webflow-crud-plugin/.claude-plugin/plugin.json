@@ -1,0 +1,11 @@
+{
+  "name": "webflow-crud",
+  "description": "Webflow CMS CRUD operations plugin. Create, Read, Update, Delete, and Publish Webflow CMS collection items and manage static page metadata directly from Claude Code using the Webflow Data API v2.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Manav Kundra",
+    "url": "https://github.com/manav148"
+  },
+  "keywords": ["webflow", "cms", "collections", "crud", "api-v2"],
+  "license": "MIT"
+}

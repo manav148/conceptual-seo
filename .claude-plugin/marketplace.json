@@ -1,6 +1,6 @@
 {
   "name": "conceptual-seo-marketplace",
-  "description": "Claude Code marketplace for WordPress, Ghost CMS, and SEO tools",
+  "description": "Claude Code marketplace for WordPress, Ghost CMS, Webflow, and SEO tools",
   "owner": {
     "name": "Manav Kundra"
   },
@@ -16,6 +16,13 @@
       "name": "ghost-crud",
       "description": "Ghost CMS Pages CRUD operations — Create, Read, Update, and Delete pages via the Ghost Admin API with session-based JWT authentication.",
       "source": "./ghost-crud-plugin",
+      "version": "1.0.0",
+      "category": "productivity"
+    },
+    {
+      "name": "webflow-crud",
+      "description": "Webflow CMS CRUD operations — Create, Read, Update, Delete, and Publish collection items plus static page metadata via the Webflow Data API v2.",
+      "source": "./webflow-crud-plugin",
       "version": "1.0.0",
       "category": "productivity"
     }
