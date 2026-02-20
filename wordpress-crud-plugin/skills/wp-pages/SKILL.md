@@ -68,6 +68,47 @@ AUTH=$(printf '%s:%s' "$WP_USERNAME" "$WP_APP_PASSWORD" | base64)
 
 ---
 
+## Markdown to HTML Conversion
+
+**CRITICAL: Before sending content to WordPress (create or update), detect if the content is Markdown and convert it to HTML.**
+
+### Detection Rules
+
+Content is likely Markdown if it contains ANY of:
+- Lines starting with `#`, `##`, `###` (headers)
+- `**bold**` or `*italic*` syntax
+- `[link text](url)` patterns
+- Fenced code blocks (triple backticks)
+- Lines starting with `- ` or `* ` (unordered lists)
+- Lines starting with `1. `, `2. ` (ordered lists)
+- `> ` blockquotes
+
+### Conversion Process
+
+When markdown content is detected, write it to a temp file and convert using the bundled script:
+
+```bash
+# Write markdown content to temp file
+TMPMD=$(mktemp /tmp/wp-content-XXXXXX.md)
+cat > "$TMPMD" << 'MDCONTENT'
+YOUR_MARKDOWN_CONTENT_HERE
+MDCONTENT
+
+# Convert to HTML
+HTML_CONTENT=$(bash !{SKILL_DIR}/../../scripts/md-to-html.sh "$TMPMD")
+rm -f "$TMPMD"
+
+# Use $HTML_CONTENT in the API call
+```
+
+The converter tries pandoc first, then Python markdown, then Node.js marked, with built-in regex fallbacks. At least one of python3/node/pandoc is expected to be available.
+
+**Always inform the user:** "Detected Markdown content — converting to HTML before posting to WordPress."
+
+If the content is already HTML (contains `<p>`, `<h1>`, `<div>`, etc.), skip conversion and post as-is.
+
+---
+
 ## CRUD Operations
 
 Use `$ARGUMENTS` to determine which operation the user wants. Parse the first argument as the operation type.
@@ -78,7 +119,7 @@ Use `$ARGUMENTS` to determine which operation the user wants. Parse the first ar
 
 Ask the user for (at minimum):
 - **Title** (required)
-- **Content** (required — can be HTML or plain text)
+- **Content** (required — can be HTML, Markdown, or plain text. Markdown is auto-converted to HTML before posting.)
 - **Status** — `publish`, `draft`, `pending`, `private` (default: `draft`)
 
 Optional fields to ask about:
@@ -104,6 +145,8 @@ curl -s -X POST "${WP_SITE_URL}/wp-json/wp/v2/pages" \
     "status": "STATUS"
   }'
 ```
+
+**Before sending:** If content is Markdown, convert it to HTML using the conversion process described above.
 
 **After creation:** Display the page ID, title, status, slug, and direct link to the user.
 
@@ -184,6 +227,8 @@ curl -s -X POST "${WP_SITE_URL}/wp-json/wp/v2/pages/PAGE_ID" \
 **Updatable fields:** `title`, `content`, `status`, `slug`, `excerpt`, `author`, `parent`, `menu_order`, `comment_status`, `featured_media`, `template`, `meta`, `password`
 
 Only include fields that the user wants to change.
+
+**Before sending:** If updated content is Markdown, convert it to HTML using the conversion process described above.
 
 **After update:** Show a diff-style summary of what changed and the updated page link.
 
