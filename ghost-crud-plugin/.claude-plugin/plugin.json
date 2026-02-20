@@ -1,0 +1,11 @@
+{
+  "name": "ghost-crud",
+  "description": "Ghost CMS Pages CRUD operations plugin. Create, Read, Update, and Delete Ghost pages directly from Claude Code using the Ghost Admin API with session-based JWT authentication.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Manav Kundra",
+    "url": "https://github.com/manav148"
+  },
+  "keywords": ["ghost", "cms", "pages", "crud", "admin-api"],
+  "license": "MIT"
+}

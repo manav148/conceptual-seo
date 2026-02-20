@@ -1,6 +1,6 @@
 {
   "name": "conceptual-seo-marketplace",
-  "description": "Claude Code marketplace for WordPress and SEO tools",
+  "description": "Claude Code marketplace for WordPress, Ghost CMS, and SEO tools",
   "owner": {
     "name": "Manav Kundra"
   },
@@ -10,6 +10,13 @@
       "description": "WordPress Pages CRUD operations — Create, Read, Update, and Delete pages via the WordPress REST API with session-based authentication.",
       "source": "./wordpress-crud-plugin",
       "version": "1.1.0",
+      "category": "productivity"
+    },
+    {
+      "name": "ghost-crud",
+      "description": "Ghost CMS Pages CRUD operations — Create, Read, Update, and Delete pages via the Ghost Admin API with session-based JWT authentication.",
+      "source": "./ghost-crud-plugin",
+      "version": "1.0.0",
       "category": "productivity"
     }
   ]
