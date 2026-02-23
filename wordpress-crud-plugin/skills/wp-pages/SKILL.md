@@ -1,12 +1,13 @@
 ---
 name: wp-pages
 description: >
-  WordPress Pages CRUD operations. Use this skill when the user wants to
-  create, read, list, update, or delete WordPress pages. Also use when they
-  mention WordPress page management, publishing pages, drafting pages,
-  or working with their WordPress site content. Triggers on: wordpress pages,
-  create page, list pages, update page, delete page, wp pages, publish page,
-  draft page, manage wordpress content.
+  WordPress Pages CRUD and Yoast SEO operations. Use this skill when the user wants to
+  create, read, list, update, or delete WordPress pages, or manage Yoast SEO metadata
+  (meta title, meta description, focus keyphrase, Open Graph, Twitter cards, canonical URL,
+  robots directives, schema type). Triggers on: wordpress pages, create page, list pages,
+  update page, delete page, wp pages, publish page, draft page, manage wordpress content,
+  yoast seo, meta description, seo title, focus keyphrase, open graph, canonical url,
+  wordpress seo, update seo, page seo.
 allowed-tools: Bash, Read, Write, Glob, Grep, AskUserQuestion
 argument-hint: "[create|list|read|update|delete] [options]"
 ---
@@ -309,6 +310,135 @@ Page Details:
   - To view:    visit the link above
 ```
 
+## Yoast SEO Operations
+
+This plugin supports reading and updating Yoast SEO metadata for pages. Uses the **same credentials** as all other WordPress operations.
+
+### Prerequisites for Yoast WRITE Operations
+
+Writing Yoast fields requires a small WordPress plugin installed on the site. The plugin is bundled at:
+`!{SKILL_DIR}/../../wordpress-plugins/yoast-rest-api-fields.php`
+
+**Inform the user:** If they want to UPDATE Yoast fields, they need to install the `yoast-rest-api-fields.php` plugin on their WordPress site (upload to `wp-content/plugins/` and activate). Reading Yoast data works without any extra plugin.
+
+### READ Yoast SEO Data
+
+Yoast data is automatically included in standard page responses via `yoast_head_json`:
+
+```bash
+CREDS=$(bash !{SKILL_DIR}/../../scripts/wp-credentials.sh load)
+WP_SITE_URL=$(echo "$CREDS" | cut -d'|' -f1)
+WP_USERNAME=$(echo "$CREDS" | cut -d'|' -f2)
+WP_APP_PASSWORD=$(echo "$CREDS" | cut -d'|' -f3)
+AUTH=$(printf '%s:%s' "$WP_USERNAME" "$WP_APP_PASSWORD" | base64)
+
+# Read Yoast data for a specific page
+curl -s "${WP_SITE_URL}/wp-json/wp/v2/pages/PAGE_ID" \
+  -H "Authorization: Basic $AUTH" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+yoast = data.get('yoast_head_json', {})
+print(json.dumps(yoast, indent=2))
+"
+```
+
+You can also use the dedicated Yoast endpoint (no auth needed):
+```bash
+curl -s "${WP_SITE_URL}/wp-json/yoast/v1/get_head?url=PAGE_URL"
+```
+
+**Display Yoast data as:**
+```
+Yoast SEO Data for Page #42:
+  SEO Title:        About Us - My Site
+  Meta Description:  Learn about our company and mission.
+  Focus Keyphrase:   about us
+  Canonical URL:     https://example.com/about-us/
+  Robots:            index, follow
+  OG Title:          About Us - My Site
+  OG Description:    Learn about our company and mission.
+  OG Image:          https://example.com/wp-content/uploads/og.jpg
+  Twitter Title:     About Us
+  Twitter Desc:      Learn about our company.
+  Schema Type:       WebPage
+  Cornerstone:       No
+```
+
+### UPDATE Yoast SEO Fields
+
+**Requires the `yoast-rest-api-fields.php` plugin to be installed and activated.**
+
+Uses the same `POST /wp-json/wp/v2/pages/{id}` endpoint with Yoast-specific fields:
+
+```bash
+CREDS=$(bash !{SKILL_DIR}/../../scripts/wp-credentials.sh load)
+WP_SITE_URL=$(echo "$CREDS" | cut -d'|' -f1)
+WP_USERNAME=$(echo "$CREDS" | cut -d'|' -f2)
+WP_APP_PASSWORD=$(echo "$CREDS" | cut -d'|' -f3)
+AUTH=$(printf '%s:%s' "$WP_USERNAME" "$WP_APP_PASSWORD" | base64)
+
+curl -s -X POST "${WP_SITE_URL}/wp-json/wp/v2/pages/PAGE_ID" \
+  -H "Authorization: Basic $AUTH" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "yoast_title": "Custom SEO Title %%sep%% %%sitename%%",
+    "yoast_metadesc": "A compelling meta description under 160 characters.",
+    "yoast_focuskw": "target keyword",
+    "yoast_canonical": "https://example.com/canonical-url/",
+    "yoast_og_title": "Open Graph Title for Social Sharing",
+    "yoast_og_description": "OG description for Facebook, LinkedIn, etc.",
+    "yoast_og_image": "https://example.com/wp-content/uploads/og-image.jpg",
+    "yoast_twitter_title": "Twitter Card Title",
+    "yoast_twitter_description": "Twitter card description.",
+    "yoast_twitter_image": "https://example.com/wp-content/uploads/twitter-image.jpg"
+  }'
+```
+
+**Available Yoast fields for update:**
+
+| REST Field | Description | Example |
+|------------|-------------|---------|
+| `yoast_title` | SEO title (supports `%%title%%`, `%%sep%%`, `%%sitename%%`) | `"My Page %%sep%% %%sitename%%"` |
+| `yoast_metadesc` | Meta description | `"Under 160 characters"` |
+| `yoast_focuskw` | Focus keyphrase | `"target keyword"` |
+| `yoast_canonical` | Canonical URL override | `"https://example.com/page/"` |
+| `yoast_noindex` | Noindex control | `""` (default), `"1"` (noindex), `"2"` (index) |
+| `yoast_nofollow` | Nofollow control | `"0"` (follow), `"1"` (nofollow) |
+| `yoast_og_title` | Open Graph title | `"OG Title"` |
+| `yoast_og_description` | Open Graph description | `"OG description"` |
+| `yoast_og_image` | Open Graph image URL | `"https://..."` |
+| `yoast_twitter_title` | Twitter card title | `"Twitter Title"` |
+| `yoast_twitter_description` | Twitter card description | `"Twitter desc"` |
+| `yoast_twitter_image` | Twitter card image URL | `"https://..."` |
+| `yoast_schema_page_type` | Schema.org page type | `"WebPage"`, `"FAQPage"`, `"AboutPage"` |
+| `yoast_schema_article_type` | Schema.org article type | `"Article"`, `"BlogPosting"` |
+| `yoast_is_cornerstone` | Cornerstone content flag | `"1"` (yes), `""` (no) |
+| `yoast_breadcrumb_title` | Breadcrumb title override | `"About"` |
+| `yoast_robots_advanced` | Advanced robots directives | `"noimageindex,noarchive"` |
+
+Only include fields that the user wants to change.
+
+**After update:** Show what Yoast fields were changed and their new values.
+
+### Yoast + Page Content in One Request
+
+You can update both page content AND Yoast fields in a single API call:
+
+```bash
+curl -s -X POST "${WP_SITE_URL}/wp-json/wp/v2/pages/PAGE_ID" \
+  -H "Authorization: Basic $AUTH" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Updated Page Title",
+    "content": "Updated HTML content",
+    "yoast_title": "SEO Title",
+    "yoast_metadesc": "Meta description",
+    "yoast_focuskw": "keyword"
+  }'
+```
+
+---
+
 ## Error Handling
 
 Handle these common errors gracefully:
@@ -341,3 +471,4 @@ Support natural language variations:
 - **Read:** `list`, `read`, `get`, `show`, `view`, `find`, `search`
 - **Update:** `update`, `edit`, `modify`, `change`, `publish` (when targeting existing page)
 - **Delete:** `delete`, `remove`, `trash`, `destroy`
+- **Yoast SEO:** `seo`, `yoast`, `meta`, `meta description`, `seo title`, `focus keyphrase`, `canonical`, `open graph`, `og`, `twitter card`, `robots`, `schema`, `cornerstone`
