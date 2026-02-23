@@ -1,13 +1,13 @@
 ---
 name: wp-pages
 description: >
-  WordPress Pages CRUD and Yoast SEO operations. Use this skill when the user wants to
-  create, read, list, update, or delete WordPress pages, or manage Yoast SEO metadata
-  (meta title, meta description, focus keyphrase, Open Graph, Twitter cards, canonical URL,
-  robots directives, schema type). Triggers on: wordpress pages, create page, list pages,
-  update page, delete page, wp pages, publish page, draft page, manage wordpress content,
-  yoast seo, meta description, seo title, focus keyphrase, open graph, canonical url,
-  wordpress seo, update seo, page seo.
+  WordPress Pages CRUD, Yoast SEO, and RankMath SEO operations. Use this skill when the
+  user wants to create, read, list, update, or delete WordPress pages, or manage SEO metadata
+  via Yoast or RankMath (meta title, meta description, focus keyphrase, Open Graph, Twitter
+  cards, canonical URL, robots directives, schema type). Triggers on: wordpress pages,
+  create page, list pages, update page, delete page, wp pages, publish page, draft page,
+  manage wordpress content, yoast seo, rankmath, rank math, meta description, seo title,
+  focus keyphrase, open graph, canonical url, wordpress seo, update seo, page seo.
 allowed-tools: Bash, Read, Write, Glob, Grep, AskUserQuestion
 argument-hint: "[create|list|read|update|delete] [options]"
 ---
@@ -439,6 +439,166 @@ curl -s -X POST "${WP_SITE_URL}/wp-json/wp/v2/pages/PAGE_ID" \
 
 ---
 
+## RankMath SEO Operations
+
+This plugin also supports reading and updating RankMath SEO metadata. Uses the **same credentials** as all other WordPress operations.
+
+### Prerequisites for RankMath WRITE Operations
+
+Writing RankMath fields requires a small WordPress plugin installed on the site. The plugin is bundled at:
+`!{SKILL_DIR}/../../wordpress-plugins/rankmath-rest-api-fields.php`
+
+**Inform the user:** If they want to UPDATE RankMath fields, they need to install the `rankmath-rest-api-fields.php` plugin on their WordPress site (upload to `wp-content/plugins/` and activate).
+
+### Detecting Which SEO Plugin Is Active
+
+**Ask the user** which SEO plugin they use (Yoast or RankMath) if unclear. You can also detect it:
+
+```bash
+CREDS=$(bash !{SKILL_DIR}/../../scripts/wp-credentials.sh load)
+WP_SITE_URL=$(echo "$CREDS" | cut -d'|' -f1)
+WP_USERNAME=$(echo "$CREDS" | cut -d'|' -f2)
+WP_APP_PASSWORD=$(echo "$CREDS" | cut -d'|' -f3)
+AUTH=$(printf '%s:%s' "$WP_USERNAME" "$WP_APP_PASSWORD" | base64)
+
+# Check for Yoast
+curl -s "${WP_SITE_URL}/wp-json/yoast/v1/get_head?url=${WP_SITE_URL}/" -o /dev/null -w "%{http_code}"
+# 200 = Yoast active, 404 = not active
+
+# Check for RankMath
+curl -s "${WP_SITE_URL}/wp-json/rankmath/v1/getHead?url=${WP_SITE_URL}/" -o /dev/null -w "%{http_code}"
+# 200 = RankMath active (if Headless CMS mode enabled), 404 = not active or not enabled
+```
+
+### READ RankMath SEO Data
+
+#### Method 1: Via the RankMath getHead endpoint (no auth needed, returns HTML)
+
+The user must enable **Headless CMS Support** at: Rank Math > General Settings > Others > Headless CMS Support.
+
+```bash
+curl -s "${WP_SITE_URL}/wp-json/rankmath/v1/getHead?url=PAGE_URL"
+```
+
+#### Method 2: Via page meta (requires auth + PHP plugin installed)
+
+```bash
+CREDS=$(bash !{SKILL_DIR}/../../scripts/wp-credentials.sh load)
+WP_SITE_URL=$(echo "$CREDS" | cut -d'|' -f1)
+WP_USERNAME=$(echo "$CREDS" | cut -d'|' -f2)
+WP_APP_PASSWORD=$(echo "$CREDS" | cut -d'|' -f3)
+AUTH=$(printf '%s:%s' "$WP_USERNAME" "$WP_APP_PASSWORD" | base64)
+
+curl -s "${WP_SITE_URL}/wp-json/wp/v2/pages/PAGE_ID?context=edit" \
+  -H "Authorization: Basic $AUTH" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+meta = data.get('meta', {})
+rm_fields = {k: v for k, v in meta.items() if k.startswith('rank_math_')}
+print(json.dumps(rm_fields, indent=2))
+"
+```
+
+**Display RankMath data as:**
+```
+RankMath SEO Data for Page #42:
+  SEO Title:        About Us - My Site
+  Meta Description:  Learn about our company and mission.
+  Focus Keyword:     about us, company info
+  Canonical URL:     https://example.com/about-us/
+  Robots:            [index, follow]
+  OG Title:          About Us - My Site
+  OG Description:    Learn about our company and mission.
+  OG Image:          https://example.com/wp-content/uploads/og.jpg
+  Twitter Title:     About Us
+  Twitter Desc:      Learn about our company.
+  Schema Type:       article (BlogPosting)
+  Pillar Content:    Yes
+```
+
+### UPDATE RankMath SEO Fields
+
+**Requires the `rankmath-rest-api-fields.php` plugin to be installed and activated.**
+
+RankMath fields go inside the `meta` object (unlike Yoast which uses top-level fields):
+
+```bash
+CREDS=$(bash !{SKILL_DIR}/../../scripts/wp-credentials.sh load)
+WP_SITE_URL=$(echo "$CREDS" | cut -d'|' -f1)
+WP_USERNAME=$(echo "$CREDS" | cut -d'|' -f2)
+WP_APP_PASSWORD=$(echo "$CREDS" | cut -d'|' -f3)
+AUTH=$(printf '%s:%s' "$WP_USERNAME" "$WP_APP_PASSWORD" | base64)
+
+curl -s -X POST "${WP_SITE_URL}/wp-json/wp/v2/pages/PAGE_ID" \
+  -H "Authorization: Basic $AUTH" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "meta": {
+      "rank_math_title": "Custom SEO Title %sep% %sitename%",
+      "rank_math_description": "A compelling meta description under 160 characters.",
+      "rank_math_focus_keyword": "target keyword, secondary keyword",
+      "rank_math_canonical_url": "https://example.com/canonical-url/",
+      "rank_math_robots": ["index", "follow"],
+      "rank_math_facebook_title": "Open Graph Title for Social Sharing",
+      "rank_math_facebook_description": "OG description for Facebook, LinkedIn.",
+      "rank_math_facebook_image": "https://example.com/wp-content/uploads/og-image.jpg",
+      "rank_math_twitter_title": "Twitter Card Title",
+      "rank_math_twitter_description": "Twitter card description.",
+      "rank_math_twitter_image": "https://example.com/wp-content/uploads/twitter-image.jpg",
+      "rank_math_twitter_card_type": "summary_large_image"
+    }
+  }'
+```
+
+**Available RankMath fields for update:**
+
+| Meta Key | Description | Value Format |
+|----------|-------------|--------------|
+| `rank_math_title` | SEO title (supports `%title%`, `%sep%`, `%sitename%`) | String |
+| `rank_math_description` | Meta description | String |
+| `rank_math_focus_keyword` | Focus keyword(s), comma-separated | String |
+| `rank_math_canonical_url` | Canonical URL override | URL string |
+| `rank_math_robots` | Robots directives | Array: `["index", "follow"]`, `["noindex"]` |
+| `rank_math_facebook_title` | OG title | String |
+| `rank_math_facebook_description` | OG description | String |
+| `rank_math_facebook_image` | OG image URL | URL string |
+| `rank_math_twitter_title` | Twitter card title | String |
+| `rank_math_twitter_description` | Twitter card description | String |
+| `rank_math_twitter_image` | Twitter card image URL | URL string |
+| `rank_math_twitter_card_type` | Twitter card type | `"summary_large_image"`, `"summary"` |
+| `rank_math_twitter_use_facebook` | Use OG data for Twitter | `"on"` / `"off"` |
+| `rank_math_rich_snippet` | Schema type | `"article"`, `"product"`, `"off"`, etc. |
+| `rank_math_snippet_article_type` | Article subtype | `"Article"`, `"BlogPosting"`, `"NewsArticle"` |
+| `rank_math_pillar_content` | Cornerstone/pillar flag | `"on"` or `""` |
+| `rank_math_breadcrumb_title` | Breadcrumb title override | String |
+| `rank_math_redirect_url` | Redirect destination | URL string |
+| `rank_math_redirect_type` | Redirect HTTP code | `"301"`, `"302"`, `"307"` |
+| `rank_math_primary_category` | Primary category ID | Integer |
+
+**Key difference from Yoast:** RankMath fields go inside `"meta": {}`, Yoast fields are top-level.
+
+### RankMath + Yoast + Page Content in One Request
+
+You can mix page content, Yoast fields, and RankMath fields. Only use the fields for the active SEO plugin:
+
+```bash
+# For RankMath sites:
+curl -s -X POST "${WP_SITE_URL}/wp-json/wp/v2/pages/PAGE_ID" \
+  -H "Authorization: Basic $AUTH" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Updated Page Title",
+    "content": "Updated HTML content",
+    "meta": {
+      "rank_math_title": "SEO Title",
+      "rank_math_description": "Meta description",
+      "rank_math_focus_keyword": "keyword"
+    }
+  }'
+```
+
+---
+
 ## Error Handling
 
 Handle these common errors gracefully:
@@ -471,4 +631,6 @@ Support natural language variations:
 - **Read:** `list`, `read`, `get`, `show`, `view`, `find`, `search`
 - **Update:** `update`, `edit`, `modify`, `change`, `publish` (when targeting existing page)
 - **Delete:** `delete`, `remove`, `trash`, `destroy`
-- **Yoast SEO:** `seo`, `yoast`, `meta`, `meta description`, `seo title`, `focus keyphrase`, `canonical`, `open graph`, `og`, `twitter card`, `robots`, `schema`, `cornerstone`
+- **Yoast SEO:** `yoast`, `yoast seo`, `yoast title`, `yoast description`
+- **RankMath SEO:** `rankmath`, `rank math`, `rankmath seo`, `rank math title`, `rank math description`
+- **SEO (either):** `seo`, `meta`, `meta description`, `seo title`, `focus keyphrase`, `focus keyword`, `canonical`, `open graph`, `og`, `twitter card`, `robots`, `schema`, `cornerstone`, `pillar content`

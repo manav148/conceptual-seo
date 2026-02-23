@@ -1,11 +1,11 @@
 {
   "name": "wordpress-crud",
-  "description": "WordPress Pages CRUD and Yoast SEO operations plugin. Create, Read, Update, and Delete WordPress pages and manage Yoast SEO metadata directly from Claude Code using the WordPress REST API.",
-  "version": "1.2.0",
+  "description": "WordPress Pages CRUD, Yoast SEO, and RankMath SEO operations plugin. Manage pages and SEO metadata directly from Claude Code using the WordPress REST API.",
+  "version": "1.3.0",
   "author": {
     "name": "Manav Kundra",
     "url": "https://github.com/manav148"
   },
-  "keywords": ["wordpress", "cms", "pages", "crud", "rest-api", "yoast", "seo"],
+  "keywords": ["wordpress", "cms", "pages", "crud", "rest-api", "yoast", "rankmath", "seo"],
   "license": "MIT"
 }
