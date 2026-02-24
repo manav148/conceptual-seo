@@ -77,15 +77,16 @@ Content-Type: application/json
 
 ## Content Quality Gate (Pre-Upload)
 
-**BEFORE uploading or publishing any article content, you MUST run the content through the `content-optimizer` skill if it is available.** This analyzes the content for AI tells, readability, SEO, and quality issues, then fixes them.
+**BEFORE uploading or publishing any article content, you MUST run the content through the `content-optimizer` skill if it is available.** This audits the article across 7 dimensions (AI detection, readability, SEO, LLM citability, E-E-A-T, engagement, product/sales balance) and outputs a corrected, publish-ready article.
 
 Workflow:
 1. User provides content to create or update a page
-2. Invoke the `content-optimizer` skill (Phase 1: analyze, Phase 2: fix if needed)
-3. Present the scorecard to the user
+2. Invoke the `content-optimizer` skill with the article content and SEO metadata (target keyword, page title, slug)
+3. The optimizer returns the corrected article as clean markdown — no scorecard, no commentary
 4. Ask: "Upload the optimized version or the original?"
-5. Include the SEO metadata (Ghost meta_title, meta_description, og_*, twitter_*) from the optimizer output in the API call
-6. Proceed with the CMS upload
+5. Convert the optimized markdown to HTML (using the Markdown to HTML conversion below)
+6. Include SEO metadata (Ghost meta_title, meta_description, og_*, twitter_*) in the API call
+7. Proceed with the CMS upload
 
 If the `content-optimizer` skill is not installed, skip this step and proceed normally.
 
