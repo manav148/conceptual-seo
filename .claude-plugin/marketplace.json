@@ -28,9 +28,9 @@
     },
     {
       "name": "content-optimizer",
-      "description": "AI content decontamination and SEO quality gate. Analyzes articles for AI tells, readability, SEO, LLM citability, E-E-A-T, and engagement, then rewrites to sound human while preserving facts.",
+      "description": "AI content decontamination and SEO quality gate. Audits articles across 7 dimensions and outputs a corrected, publish-ready article preserving facts and author voice.",
       "source": "./content-optimizer-plugin",
-      "version": "1.0.0",
+      "version": "2.0.0",
       "category": "content"
     }
   ]
