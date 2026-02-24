@@ -22,6 +22,10 @@ Full CRUD operations for Webflow CMS collection items plus static page metadata 
 
 See [webflow-crud-plugin/README.md](./webflow-crud-plugin/README.md) for details.
 
+### content-optimizer
+
+AI content decontamination and SEO quality gate. Analyzes articles across 6 dimensions (AI detection, readability, SEO, LLM citability, E-E-A-T, engagement), scores them, and rewrites to sound human while preserving facts. Automatically invoked by all CMS plugins before content upload.
+
 ## Marketplace
 
 This repository serves as a Claude Code marketplace. The `.claude-plugin/marketplace.json` catalogs all available plugins.

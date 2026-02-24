@@ -1,0 +1,11 @@
+{
+  "name": "content-optimizer",
+  "description": "AI content decontamination and SEO optimization plugin. Analyzes articles across 6 dimensions (AI detection, readability, SEO, LLM citability, E-E-A-T, engagement), scores them, and rewrites to sound human while preserving facts and author voice.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Manav Kundra",
+    "url": "https://github.com/manav148"
+  },
+  "keywords": ["content", "seo", "ai-detection", "humanize", "eeat", "readability", "optimization"],
+  "license": "MIT"
+}

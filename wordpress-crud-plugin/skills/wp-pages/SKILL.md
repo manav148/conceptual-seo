@@ -69,6 +69,22 @@ AUTH=$(printf '%s:%s' "$WP_USERNAME" "$WP_APP_PASSWORD" | base64)
 
 ---
 
+## Content Quality Gate (Pre-Upload)
+
+**BEFORE uploading or publishing any article content, you MUST run the content through the `content-optimizer` skill if it is available.** This analyzes the content for AI tells, readability, SEO, and quality issues, then fixes them.
+
+Workflow:
+1. User provides content to create or update a page
+2. Invoke the `content-optimizer` skill (Phase 1: analyze, Phase 2: fix if needed)
+3. Present the scorecard to the user
+4. Ask: "Upload the optimized version or the original?"
+5. Include the SEO metadata (Yoast or RankMath fields) from the optimizer output in the API call
+6. Proceed with the CMS upload
+
+If the `content-optimizer` skill is not installed, skip this step and proceed normally.
+
+---
+
 ## Markdown to HTML Conversion
 
 **CRITICAL: Before sending content to WordPress (create or update), detect if the content is Markdown and convert it to HTML.**

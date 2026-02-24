@@ -98,6 +98,22 @@ Content-Type: application/json
 
 ---
 
+## Content Quality Gate (Pre-Upload)
+
+**BEFORE uploading or publishing any article content, you MUST run the content through the `content-optimizer` skill if it is available.** This analyzes the content for AI tells, readability, SEO, and quality issues, then fixes them.
+
+Workflow:
+1. User provides content to create or update a CMS item
+2. Invoke the `content-optimizer` skill (Phase 1: analyze, Phase 2: fix if needed)
+3. Present the scorecard to the user
+4. Ask: "Upload the optimized version or the original?"
+5. Include the SEO metadata (Webflow seo.title, seo.description, openGraph.*) from the optimizer output
+6. Proceed with the CMS upload
+
+If the `content-optimizer` skill is not installed, skip this step and proceed normally.
+
+---
+
 ## Markdown to HTML Conversion
 
 **CRITICAL: Before sending RichText content to Webflow, detect if the content is Markdown and convert it to HTML.**

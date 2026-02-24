@@ -25,6 +25,13 @@
       "source": "./webflow-crud-plugin",
       "version": "1.0.0",
       "category": "productivity"
+    },
+    {
+      "name": "content-optimizer",
+      "description": "AI content decontamination and SEO quality gate. Analyzes articles for AI tells, readability, SEO, LLM citability, E-E-A-T, and engagement, then rewrites to sound human while preserving facts.",
+      "source": "./content-optimizer-plugin",
+      "version": "1.0.0",
+      "category": "content"
     }
   ]
 }
