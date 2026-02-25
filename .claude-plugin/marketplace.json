@@ -39,6 +39,13 @@
       "source": "./image-manager-plugin",
       "version": "1.1.0",
       "category": "media"
+    },
+    {
+      "name": "seo-executor",
+      "description": "Bulk article upload orchestrator. Reads articles from CSV/JSON/markdown, deduplicates against CMS, runs content-optimizer, and uploads via WordPress, Ghost, or Webflow plugins with parallel sub-agent execution.",
+      "source": "./seo-executor-plugin",
+      "version": "1.0.0",
+      "category": "productivity"
     }
   ]
 }

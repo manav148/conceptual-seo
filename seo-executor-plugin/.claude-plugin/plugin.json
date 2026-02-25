@@ -1,0 +1,11 @@
+{
+  "name": "seo-executor",
+  "description": "Bulk article upload orchestrator. Reads articles from a file (CSV, JSON, markdown), runs content-optimizer, deduplicates against the target CMS, and uploads via the appropriate CMS plugin (WordPress, Ghost, Webflow). Supports parallel sub-agent execution.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Manav Kundra",
+    "url": "https://github.com/manav148"
+  },
+  "keywords": ["seo", "bulk-upload", "orchestrator", "csv", "content-pipeline", "wordpress", "ghost", "webflow"],
+  "license": "MIT"
+}

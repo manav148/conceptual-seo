@@ -32,6 +32,18 @@ Multi-CMS image manager. Search a local folder or CMS media library, auto-match 
 
 See [image-manager-plugin/README.md](./image-manager-plugin/README.md) for details.
 
+### seo-executor
+
+Bulk article upload orchestrator. Reads articles from CSV, JSON, or markdown files, deduplicates against existing CMS content, runs the content-optimizer on each article, and uploads via WordPress, Ghost, or Webflow plugins. Supports parallel sub-agent execution for speed.
+
+**Example usage:**
+```
+/webflow-cms can we upload the articles in @articles.csv to webflow blogs.
+ensure there are no duplicates. Run the content-optimizer on all articles
+before posting. Post as draft. Use category as "Trading Education" and
+Author as "Team". Use sub agents to divide and conquer.
+```
+
 ## Marketplace
 
 This repository serves as a Claude Code marketplace. The `.claude-plugin/marketplace.json` catalogs all available plugins.
