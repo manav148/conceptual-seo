@@ -30,7 +30,7 @@
       "name": "content-optimizer",
       "description": "AI content decontamination and SEO quality gate. Audits articles across 10 dimensions and outputs a corrected, publish-ready article as clean HTML.",
       "source": "./content-optimizer-plugin",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "category": "content"
     },
     {

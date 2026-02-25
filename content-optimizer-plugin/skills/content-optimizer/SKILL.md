@@ -133,7 +133,7 @@ LLMs pull answers from content that is structured, specific, and self-contained.
 
 **Structured elements:** Tables, numbered lists, and comparison formats are parsed more reliably by LLMs than prose paragraphs. Check whether existing tables and lists are well-labeled and self-explanatory (column headers, row labels). Flag any table where a reader couldn't understand the data without reading surrounding paragraphs.
 
-**Table format:** ALL tables must be converted to properly formatted HTML tables, not markdown pipe tables. Markdown tables render inconsistently across CMS platforms, email clients, and LLM parsers. HTML tables give you full control over formatting and spacing. Every table must use clean, indented HTML with `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, and `<td>` tags. No inline styles unless the original had them. Proper spacing and indentation so the raw HTML is readable by editors who need to update the content later.
+**Table format:** ALL tables must be converted to properly formatted HTML tables, not markdown pipe tables. Markdown tables render inconsistently across CMS platforms, email clients, and LLM parsers. HTML tables give you full control over formatting and spacing. Every table must use clean, indented HTML with `<table>`, `<thead>`, `<tbody>`, `<tr>`, `<th>`, and `<td>` tags. All tables must include inline border styles for visible cell borders (see template in Fix Application section). Proper spacing and indentation so the raw HTML is readable by editors who need to update the content later.
 
 **Consistent terminology:** LLMs get confused when the same concept is called different things in different sections. Check if the article uses one consistent term for each key concept throughout (e.g., don't switch between "evaluation," "challenge," "assessment," and "test" for the same thing unless they genuinely mean different things).
 
@@ -249,30 +249,32 @@ This dimension catches a specific problem: articles that read like infomercials 
 **Convert ALL tables to HTML format.** Replace every markdown pipe table with a properly formatted, indented HTML table. Use this structure:
 
 ```html
-<table>
+<table style="border-collapse: collapse; width: 100%;">
   <thead>
     <tr>
-      <th>Column Header 1</th>
-      <th>Column Header 2</th>
-      <th>Column Header 3</th>
+      <th style="border: 1px solid #ddd; padding: 8px;">Column Header 1</th>
+      <th style="border: 1px solid #ddd; padding: 8px;">Column Header 2</th>
+      <th style="border: 1px solid #ddd; padding: 8px;">Column Header 3</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>Row 1 Data</td>
-      <td>Row 1 Data</td>
-      <td>Row 1 Data</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Row 1 Data</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Row 1 Data</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Row 1 Data</td>
     </tr>
     <tr>
-      <td>Row 2 Data</td>
-      <td>Row 2 Data</td>
-      <td>Row 2 Data</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Row 2 Data</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Row 2 Data</td>
+      <td style="border: 1px solid #ddd; padding: 8px;">Row 2 Data</td>
     </tr>
   </tbody>
 </table>
 ```
 
 Rules for HTML tables:
+- Always include `style="border-collapse: collapse; width: 100%;"` on the `<table>` tag
+- Every `<th>` and `<td>` must have `style="border: 1px solid #ddd; padding: 8px;"`
 - Always separate `<thead>` and `<tbody>`
 - One `<th>` per column header, inside `<thead>`
 - Consistent indentation (2 spaces per level)
@@ -361,7 +363,7 @@ Not markdown. HTML. The entire article must be output as properly formatted HTML
 - `<blockquote><p>` for testimonials and quotes
 - `<table>` with `<thead>`, `<tbody>`, `<tr>`, `<th>`, `<td>` for tables
 - `<hr>` for section dividers (only where the original had `---`)
-- No `<div>`, `<span>`, `<style>`, `<class>`, or any CSS. Just semantic HTML tags.
+- No `<div>`, `<span>`, `<style>`, `<class>`, or any CSS — except inline border/padding styles on table elements (`<table>`, `<th>`, `<td>`).
 - No `<html>`, `<head>`, `<body>` wrappers. Just the article content starting with `<h1>` and ending with the last element.
 - Proper indentation: each nesting level indented 2 spaces for readability.
 - Empty line between block-level elements (`<h2>`, `<p>`, `<table>`, `<ul>`, etc.) for editor readability.
@@ -389,7 +391,7 @@ Run through this mentally before you output. If any check fails, fix it.
 - Every major H2 section has a bold definitional/summary sentence near the top
 - Every FAQ bold first sentence works as a standalone answer extracted without context
 - Time-sensitive claims (rates, fees, stats) have freshness markers ("as of [year]")
-- ALL tables use proper HTML (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`) with clean indentation
+- ALL tables use proper HTML (`<table>`, `<thead>`, `<tbody>`, `<th>`, `<td>`) with inline border styles and clean indentation
 - Tables have clear headers that make sense without surrounding paragraphs
 - The brand is clearly identified ("X is a [category] that [does what]") early in the article
 - A TL;DR exists, contains 2-4 specific sentences, includes the keyword and brand, and gives standalone value
