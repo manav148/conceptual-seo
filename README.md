@@ -24,7 +24,7 @@ See [webflow-crud-plugin/README.md](./webflow-crud-plugin/README.md) for details
 
 ### content-optimizer
 
-AI content decontamination and SEO quality gate. Audits articles across 7 dimensions (AI detection, readability, SEO, LLM citability, E-E-A-T, engagement, product/sales balance) and outputs a corrected, publish-ready article preserving facts and author voice. Automatically invoked by all CMS plugins before content upload.
+AI content decontamination and SEO quality gate. Audits articles across 10 dimensions (AI detection, readability, TL;DR quality, visual formatting, duplicate content, SEO, LLM citability, E-E-A-T, engagement, product/sales balance) and outputs a corrected, publish-ready article as clean HTML. Automatically invoked by all CMS plugins before content upload.
 
 ### image-manager
 

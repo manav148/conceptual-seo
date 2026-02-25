@@ -71,16 +71,18 @@ AUTH=$(printf '%s:%s' "$WP_USERNAME" "$WP_APP_PASSWORD" | base64)
 
 ## Content Quality Gate (Pre-Upload)
 
-**BEFORE uploading or publishing any article content, you MUST run the content through the `content-optimizer` skill if it is available.** This audits the article across 7 dimensions (AI detection, readability, SEO, LLM citability, E-E-A-T, engagement, product/sales balance) and outputs a corrected, publish-ready article.
+**BEFORE uploading or publishing any article content, you MUST run the content through the `content-optimizer` skill if it is available.** This audits the article across 10 dimensions (AI detection, readability, TL;DR quality, visual formatting, duplicate content, SEO, LLM citability, E-E-A-T, engagement, product/sales balance) and outputs a corrected, publish-ready article as clean HTML.
 
 Workflow:
 1. User provides content to create or update a page
-2. Invoke the `content-optimizer` skill with the article content and SEO metadata (target keyword, page title, slug)
-3. The optimizer returns the corrected article as clean markdown — no scorecard, no commentary
+2. Invoke the `content-optimizer` skill with the article content and target keyword
+3. The optimizer returns the corrected article as clean HTML — no scorecard, no commentary
 4. Ask: "Upload the optimized version or the original?"
-5. Convert the optimized markdown to HTML (using the Markdown to HTML conversion below)
+5. Use the HTML output directly (no markdown-to-HTML conversion needed)
 6. Include any SEO metadata (Yoast or RankMath fields) in the API call
 7. Proceed with the CMS upload
+
+**Note:** The content-optimizer handles article body only. SEO metadata (title tags, meta descriptions, slugs) must be handled separately.
 
 If the `content-optimizer` skill is not installed, skip this step and proceed normally.
 
