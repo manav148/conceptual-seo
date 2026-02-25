@@ -24,7 +24,13 @@ See [webflow-crud-plugin/README.md](./webflow-crud-plugin/README.md) for details
 
 ### content-optimizer
 
-AI content decontamination and SEO quality gate. Analyzes articles across 6 dimensions (AI detection, readability, SEO, LLM citability, E-E-A-T, engagement), scores them, and rewrites to sound human while preserving facts. Automatically invoked by all CMS plugins before content upload.
+AI content decontamination and SEO quality gate. Audits articles across 7 dimensions (AI detection, readability, SEO, LLM citability, E-E-A-T, engagement, product/sales balance) and outputs a corrected, publish-ready article preserving facts and author voice. Automatically invoked by all CMS plugins before content upload.
+
+### image-manager
+
+Multi-CMS image manager. Search a local folder or CMS media library, auto-match images to posts by keyword, upload, and set as featured image or insert inline. Supports WordPress, Webflow, and Ghost.
+
+See [ana-conceptual/seo-image-manager](https://github.com/ana-conceptual/seo-image-manager) for details.
 
 ## Marketplace
 

@@ -32,6 +32,19 @@
       "source": "./content-optimizer-plugin",
       "version": "2.0.0",
       "category": "content"
+    },
+    {
+      "name": "image-manager",
+      "description": "Multi-CMS image manager. Search a local folder or CMS media library, auto-match images to posts by keyword, upload, and set as featured image or insert inline. Supports WordPress, Webflow, and Ghost.",
+      "source": {
+        "source": "github",
+        "repo": "ana-conceptual/seo-image-manager",
+        "ref": "main",
+        "sha": "258462a8943647df5be6632ece0de356ded1adfb",
+        "path": "1.0.0"
+      },
+      "version": "1.0.0",
+      "category": "media"
     }
   ]
 }
