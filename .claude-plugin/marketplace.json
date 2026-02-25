@@ -37,7 +37,7 @@
       "name": "image-manager",
       "description": "Multi-CMS image manager. Search a local folder or CMS media library, auto-match images to posts by keyword, upload, and set as featured image or insert inline. Supports WordPress, Webflow, and Ghost.",
       "source": "./image-manager-plugin",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "category": "media"
     }
   ]
