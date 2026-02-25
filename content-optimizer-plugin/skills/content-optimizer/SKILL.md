@@ -2,8 +2,8 @@
 name: content-optimizer
 description: >
   Audit and fix blog posts for AI voice detection, SEO keyword integrity,
-  readability, E-E-A-T, LLM citability, and engagement — then output only
-  the corrected article as clean HTML. Use this skill whenever the user
+  readability, E-E-A-T, LLM citability, engagement, and fact verification
+  — then output only the corrected article as clean HTML. Use this skill whenever the user
   provides a blog post (in markdown, HTML, or plain text) along with a
   target keyword and wants it audited, cleaned up, or decontaminated of
   AI writing tells. Also trigger when the user says 'audit this post',
@@ -42,7 +42,7 @@ You are a senior content editor. The user will give you a blog post and its targ
 
 ## INTERNAL AUDIT (Do all of this in your thinking. Never output it.)
 
-Before writing a single word of the corrected article, analyze the original across all ten dimensions below. This analysis informs your fixes but the user never sees it.
+Before writing a single word of the corrected article, analyze the original across all dimensions below. This analysis informs your fixes but the user never sees it.
 
 ### A. AI Detection & Human Voice (HIGHEST PRIORITY)
 
@@ -156,6 +156,23 @@ This dimension catches a specific problem: articles that read like infomercials 
 **Testimonial clustering:** Customer quotes add credibility, but too many in a row or too many total disrupts reading flow. More than 2 testimonials in a single section is usually too many. More than 6-8 total in an article can make it feel like a reviews page rather than a guide. Keep the strongest, most specific testimonials and cut or consolidate the rest.
 
 **Sales language in educational sections:** Phrases like "that's a big deal," "checks the boxes that other approaches leave open," or breathless superlatives in sections that should be neutral/educational. Tone these down. The product should sell through demonstrated value, not through the author telling the reader how great it is.
+
+### H. Fact Verification
+
+Before outputting, fact-check every specific claim in the article:
+
+**Identify all checkable claims:** statistics, percentages, pricing, feature counts, review counts, user numbers, product descriptions, and named integrations.
+
+**Verification priority order:**
+1. The brand's official site and documentation first
+2. Then independent third-party reviews and sources
+3. Then regulatory or institutional sources for industry statistics
+
+**Industry-wide statistics** (e.g. "X% of traders lose money"): use the range found across credible sources rather than a single precise figure.
+
+**Self-reported platform stats** (user counts, trades journaled, community size) that can only be verified on the brand's own site: use the figure found there.
+
+**If you searched and found nothing to confirm or correct a claim,** leave the original as-is. Never leave a corrected claim without a basis.
 
 ---
 
@@ -342,6 +359,21 @@ Rules for HTML tables:
 
 **Watch for intro-conclusion mirroring.** AI articles often have conclusions that are near-verbatim restates of the intro. If the conclusion repeats the intro's points with only light rephrasing, rewrite the conclusion to be forward-looking: what should the reader do NOW? What's the single most important thing to remember? Don't just echo back what they already read.
 
+### Fact Verification Fixes
+
+**Silently correct any claim that doesn't match verified sources.** Do not flag it, add a note, or mention the correction. Just use the accurate figure in the output.
+
+**For each checkable claim** (statistics, percentages, pricing, feature counts, review counts, user numbers, product descriptions, named integrations):
+1. Search the brand's official site and documentation first
+2. Then check independent third-party reviews and sources
+3. Then check regulatory or institutional sources for industry statistics
+
+**Industry-wide statistics:** Use the range found across credible sources rather than a single precise figure. For example, if multiple sources cite different numbers for the same stat, use the most commonly cited figure or present it as a range.
+
+**Self-reported platform stats** (user counts, community size, trades journaled): Use the figure found on the brand's own site. These can only be verified there.
+
+**If no verification is possible:** Leave the original claim as-is. Never correct a claim without a basis for the correction.
+
 ---
 
 ## OUTPUT FORMAT
@@ -400,4 +432,6 @@ Run through this mentally before you output. If any check fails, fix it.
 - No stat, claim, or feature description is repeated more than twice across the article
 - No FAQ answer restates body content without adding a new angle or value
 - The conclusion doesn't mirror the intro. It's forward-looking, not a restate.
+- All specific claims (stats, pricing, feature counts, user numbers) have been fact-checked against official and third-party sources
+- Corrected claims use verified figures silently — no editorial notes or flags
 - The article is ready to paste into a CMS and publish

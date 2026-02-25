@@ -28,9 +28,9 @@
     },
     {
       "name": "content-optimizer",
-      "description": "AI content decontamination and SEO quality gate. Audits articles across 10 dimensions and outputs a corrected, publish-ready article as clean HTML.",
+      "description": "AI content decontamination and SEO quality gate. Audits articles across 11 dimensions with fact verification and outputs a corrected, publish-ready article as clean HTML.",
       "source": "./content-optimizer-plugin",
-      "version": "3.1.0",
+      "version": "3.2.0",
       "category": "content"
     },
     {
