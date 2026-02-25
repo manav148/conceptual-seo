@@ -30,7 +30,7 @@ AI content decontamination and SEO quality gate. Audits articles across 7 dimens
 
 Multi-CMS image manager. Search a local folder or CMS media library, auto-match images to posts by keyword, upload, and set as featured image or insert inline. Supports WordPress, Webflow, and Ghost.
 
-See [ana-conceptual/seo-image-manager](https://github.com/ana-conceptual/seo-image-manager) for details.
+See [image-manager-plugin/README.md](./image-manager-plugin/README.md) for details.
 
 ## Marketplace
 
