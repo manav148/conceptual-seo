@@ -149,6 +149,53 @@ rm -f "$TMPMD"
 
 ---
 
+## Anchor Link Transformation (Pre-Upload)
+
+**CRITICAL: Webflow's Rich Text renderer hijacks fragment-only anchor links (`#section-id`) and converts them to internal CMS item references, breaking navigation entirely.**
+
+### The Problem
+
+When you upload HTML containing `<a href="#section-id">`, Webflow rewrites it to:
+```html
+<a href="#" data-w-collection-id="..." data-w-item-id="...">
+```
+This points to a random CMS item instead of the intended section.
+
+### The Fix
+
+Before uploading ANY RichText content to Webflow, transform all fragment-only anchor links to full absolute URLs:
+
+- `href="#section-id"` → `href="https://www.{domain}/blog/{slug}#section-id"`
+
+The slug comes from the CMS item being created/updated. The domain comes from the site's custom domain.
+
+### Implementation
+
+After markdown-to-HTML conversion (if applicable) and before sending the API request:
+
+```python
+# Replace fragment-only anchors with full URLs
+import re
+body = re.sub(
+    r'href="#([^"]+)"',
+    f'href="{page_url}#\\1"',
+    body
+)
+```
+
+Where `page_url` is constructed from the site's domain and the item's slug (e.g., `https://www.tradezella.com/blog/my-article-slug`).
+
+### When This Applies
+
+- Creating new CMS items with RichText fields
+- Updating existing CMS items with RichText fields
+- Any "In This Guide" or table-of-contents sections with anchor links
+- Any internal page anchor links within article content
+
+This does **NOT** apply to full URLs (e.g., `href="https://example.com/page"`) — only bare fragment links starting with `#`.
+
+---
+
 ## Operations
 
 ### LIST SITES
