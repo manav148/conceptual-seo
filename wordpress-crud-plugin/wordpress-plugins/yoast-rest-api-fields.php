@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Yoast SEO REST API Fields
  * Description: Exposes Yoast SEO meta fields for reading and writing via the WordPress REST API. Required for Claude Code's WordPress CRUD plugin to manage SEO fields.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Manav Kundra
  * License: MIT
  */
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 add_action('rest_api_init', 'yoast_rest_register_fields');
 
 function yoast_rest_register_fields() {
-    $post_types = ['post', 'page'];
+    $post_types = ['post', 'page', 'location_post', 'product', 'portfolio', 'project', 'event', 'service'];
 
     $yoast_fields = [
         'yoast_title'              => '_yoast_wpseo_title',
